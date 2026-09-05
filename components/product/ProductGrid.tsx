@@ -1,4 +1,5 @@
 import { Product as ProductModel } from "@/models/Product";
+import type { Product as ProductCardProduct } from "@/types";
 import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
@@ -26,7 +27,10 @@ export function ProductGrid({ products, columns = "2-4" }: ProductGridProps) {
   return (
     <div className={gridClass}>
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard
+          key={product.id}
+          product={product as unknown as ProductCardProduct}
+        />
       ))}
     </div>
   );

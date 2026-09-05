@@ -68,7 +68,20 @@ export interface CartLine {
   quantity: number;
   selectedOptions?: Record<string, string>;
 }
-
+export interface CartItem {
+  /** Unique per product + selected options combination, e.g. "p-01::Size:0-3M|Color:Sage" */
+  lineId: string;
+  productId: string;
+  slug: string;
+  name: string;
+  image: string;
+  price: number;
+  oldPrice?: number;
+  currency: string;
+  quantity: number;
+  selectedOptions?: Record<string, string>;
+  maxQuantity: number;
+}
 export interface NavLink {
   label: string;
   href: string;

@@ -7,6 +7,7 @@ import { ProductPurchasePanel } from "@/components/product/ProductPurchasePanel"
 import { ProductTabs } from "@/components/product/ProductTabs";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import type { Product as ProductType } from "@/types";
 
 interface ProductPageProps {
   params: { id: string };
@@ -42,7 +43,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <section className="container-content py-8 sm:py-12">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
           <ProductGallery images={product.images} name={product.name} />
-          <ProductPurchasePanel product={product} />
+          <ProductPurchasePanel product={product as unknown as ProductType} />
         </div>
 
         <ProductTabs product={product} />

@@ -4,6 +4,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { CartProvider } from "@/context/CartContext";
+
 const baloo = Baloo_2({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
@@ -54,10 +56,12 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
-         <WhatsAppButton />
+        <CartProvider>
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </CartProvider>
       </body>
     </html>
   );

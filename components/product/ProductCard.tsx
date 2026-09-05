@@ -2,19 +2,42 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag, Check } from "lucide-react";
 import { useState } from "react";
 import { Rating } from "@/components/ui/Rating";
 import { Badge } from "@/components/ui/Badge";
-import { Product as ProductModel } from "@/models/Product";
+import { Product } from "@/types";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/context/CartContext";
+import {
+  getDiscountPercent,
+  isProductOnSale,
+  formatProductPrice,
+  formatProductOldPrice,
+} from "@/lib/product-helpers";
 
 interface ProductCardProps {
-  product: ProductModel;
+  product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const [wishlisted, setWishlisted] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
+  const { addItem } = useCart();
+  const onSale = isProductOnSale(product);
+  const oldPrice = formatProductOldPrice(product);
+
+  function handleAddToCart() {
+    // Quick-add from the grid uses each option's first value (e.g. the
+    // smallest size). Shoppers who want a different option can still open
+    // the product page and choose before adding.
+    const defaultOptions = product.options
+      ? Object.fromEntries(product.options.map((o) => [o.label, o.values[0]]))
+      : undefined;
+    addItem(product, 1, defaultOptions);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1800);
+  }
 
   return (
     <div className="group relative bg-white rounded-4xl shadow-card hover:shadow-lift transition-shadow duration-300 overflow-hidden flex flex-col h-full">
@@ -28,7 +51,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           />
           <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-            {product.isOnSale && <Badge tone="sale">-{product.discountPercent}%</Badge>}
+            {onSale && <Badge tone="sale">-{getDiscountPercent(product)}%</Badge>}
             {product.isNew && <Badge tone="new">New</Badge>}
           </div>
         </div>
@@ -62,14 +85,25 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-3 flex items-end justify-between gap-2">
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-lg text-teal-800">Rs. 125</span>
-            {/* {product.formattedOldPrice() && (
-              <span className="text-xs text-teal-700/40 line-through">{product.formattedOldPrice()}</span>
-            )} */}
+            <span className="font-display text-lg text-teal-800">{formatProductPrice(product)}</span>
+            {oldPrice && (
+              <span className="text-xs text-teal-700/40 line-through">{oldPrice}</span>
+            )}
           </div>
         </div>
 
-       
+        <button
+          onClick={handleAddToCart}
+          className={cn(
+            "mt-4 inline-flex items-center justify-center gap-2 rounded-full font-semibold text-sm py-2.5 transition-colors duration-300",
+            justAdded
+              ? "bg-mint-dark text-cream"
+              : "bg-teal-50 hover:bg-teal-700 hover:text-cream text-teal-700"
+          )}
+        >
+          {justAdded ? <Check size={16} /> : <ShoppingBag size={16} />}
+          {justAdded ? "Added to Cart" : "Add to Cart"}
+        </button>
       </div>
     </div>
   );

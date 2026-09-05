@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { ProductOption } from "@/types";
 import { cn } from "@/lib/utils";
 
-export function ProductOptions({ options }: { options: ProductOption[] }) {
-  const [selected, setSelected] = useState<Record<string, string>>(
-    Object.fromEntries(options.map((o) => [o.label, o.values[0]]))
-  );
+interface ProductOptionsProps {
+  options: ProductOption[];
+  selected: Record<string, string>;
+  onChange: (label: string, value: string) => void;
+}
 
+export function ProductOptions({ options, selected, onChange }: ProductOptionsProps) {
   return (
     <div className="space-y-5">
       {options.map((option) => (
@@ -20,7 +21,8 @@ export function ProductOptions({ options }: { options: ProductOption[] }) {
             {option.values.map((value) => (
               <button
                 key={value}
-                onClick={() => setSelected((s) => ({ ...s, [option.label]: value }))}
+                type="button"
+                onClick={() => onChange(option.label, value)}
                 aria-pressed={selected[option.label] === value}
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-semibold border-2 transition-colors",

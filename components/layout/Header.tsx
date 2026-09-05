@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { Search, ShoppingBag, Menu } from "lucide-react";
 import { NavLink } from "@/types";
 import { MobileMenu } from "./MobileMenu";
+import { useCart } from "@/context/CartContext";
+import { getCartItemCount } from "@/lib/cart-helpers";
 
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
@@ -18,6 +20,8 @@ const navLinks: NavLink[] = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { items } = useCart();
+  const cartCount = getCartItemCount(items);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -28,9 +32,8 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-shadow duration-300 bg-cream/95 backdrop-blur ${
-        scrolled ? "shadow-card" : ""
-      }`}
+      className={`sticky top-0 z-50 transition-shadow duration-300 bg-cream/95 backdrop-blur ${scrolled ? "shadow-card" : ""
+        }`}
     >
       <div className="container-content flex items-center justify-between gap-4 py-1">
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
@@ -68,15 +71,19 @@ export function Header() {
           >
             <Search size={20} />
           </Link>
-          <button
-            aria-label="View shopping cart"
+          <Link
+            href="/cart"
+            aria-label={`View shopping cart, ${cartCount} item${cartCount === 1 ? "" : "s"}`}
             className="relative inline-flex items-center justify-center w-10 h-10 rounded-full text-teal-700 hover:bg-mint-light transition-colors"
           >
             <ShoppingBag size={20} />
-            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-peach text-[10px] font-bold text-teal-800">
-              2
-            </span>
-          </button>
+            {cartCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-peach text-[10px] font-bold text-teal-800">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            )}
+          </Link>
+         
           <button
             aria-label="Open menu"
             aria-expanded={menuOpen}
