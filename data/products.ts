@@ -8,7 +8,7 @@ export const products: Product[] = [
     categorySlug: "clothing",
     price: 18.99,
     oldPrice: 24.99,
-    currency: "$",
+    currency: "Rs",
     rating: 4.8,
     reviewCount: 142,
     images: [
@@ -48,7 +48,7 @@ export const products: Product[] = [
     name: "Baby Elephant Plush Toy",
     categorySlug: "toys",
     price: 15.5,
-    currency: "$",
+    currency: "Rs",
     rating: 4.9,
     reviewCount: 210,
     images: [
@@ -80,7 +80,7 @@ export const products: Product[] = [
     categorySlug: "feeding",
     price: 22.0,
     oldPrice: 28.0,
-    currency: "$",
+    currency: "Rs",
     rating: 4.7,
     reviewCount: 96,
     images: [
@@ -101,7 +101,7 @@ export const products: Product[] = [
     name: "Cozy Baby Blanket",
     categorySlug: "nursery",
     price: 26.0,
-    currency: "$",
+    currency: "Rs",
     rating: 4.9,
     reviewCount: 178,
     images: [
@@ -122,7 +122,7 @@ export const products: Product[] = [
     categorySlug: "bath-care",
     price: 19.99,
     oldPrice: 27.99,
-    currency: "$",
+    currency: "Rs",
     rating: 4.6,
     reviewCount: 87,
     images: [
@@ -141,7 +141,7 @@ export const products: Product[] = [
     name: "Wooden Learning Blocks",
     categorySlug: "toys",
     price: 21.5,
-    currency: "$",
+    currency: "Rs",
     rating: 4.8,
     reviewCount: 64,
     images: [
@@ -161,7 +161,7 @@ export const products: Product[] = [
     name: "Baby Bib Set",
     categorySlug: "feeding",
     price: 12.99,
-    currency: "$",
+    currency: "Rs",
     rating: 4.5,
     reviewCount: 53,
     images: [
@@ -181,7 +181,7 @@ export const products: Product[] = [
     categorySlug: "gifts",
     price: 42.0,
     oldPrice: 55.0,
-    currency: "$",
+    currency: "Rs",
     rating: 5.0,
     reviewCount: 39,
     images: [
@@ -200,7 +200,7 @@ export const products: Product[] = [
     name: "Star Print Sleepsuit",
     categorySlug: "clothing",
     price: 16.5,
-    currency: "$",
+    currency: "Rs",
     rating: 4.7,
     reviewCount: 71,
     images: [
@@ -219,7 +219,7 @@ export const products: Product[] = [
     name: "Stacking Rainbow Toy",
     categorySlug: "toys",
     price: 17.0,
-    currency: "$",
+    currency: "Rs",
     rating: 4.8,
     reviewCount: 58,
     images: [
@@ -237,7 +237,7 @@ export const products: Product[] = [
     name: "Gentle Baby Lotion",
     categorySlug: "bath-care",
     price: 13.5,
-    currency: "$",
+    currency: "Rs",
     rating: 4.6,
     reviewCount: 49,
     images: [
@@ -256,7 +256,7 @@ export const products: Product[] = [
     categorySlug: "accessories",
     price: 34.0,
     oldPrice: 44.0,
-    currency: "$",
+    currency: "Rs",
     rating: 4.7,
     reviewCount: 66,
     images: [
@@ -275,7 +275,7 @@ export const products: Product[] = [
     name: "Cloud Nursery Lamp",
     categorySlug: "nursery",
     price: 24.5,
-    currency: "$",
+    currency: "Rs",
     rating: 4.9,
     reviewCount: 44,
     images: [
@@ -293,7 +293,7 @@ export const products: Product[] = [
     name: "First Birthday Gift Set",
     categorySlug: "gifts",
     price: 38.0,
-    currency: "$",
+    currency: "Rs",
     rating: 4.9,
     reviewCount: 22,
     images: [
