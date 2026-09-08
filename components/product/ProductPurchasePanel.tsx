@@ -92,14 +92,7 @@ export function ProductPurchasePanel({ product }: { product: Product }) {
           {added ? <Check size={18} /> : <ShoppingBag size={18} />}
           {added ? "Added to Cart" : "Add to Cart"}
         </button>
-        <button
-          onClick={handleBuyNow}
-          disabled={!inStock}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-sunshine hover:bg-sunshine/90 text-teal-800 font-semibold px-8 py-4 transition-colors shadow-soft disabled:opacity-50 disabled:pointer-events-none"
-        >
-          <Zap size={18} />
-          Buy Now
-        </button>
+       
         <button
           onClick={() => setWishlisted((w) => !w)}
           aria-pressed={wishlisted}
