@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Product as ProductModel } from "@/models/Product";
+import type { Product } from "@/types";
 import { Rating } from "@/components/ui/Rating";
 import { cn } from "@/lib/utils";
 
 const tabs = ["Description", "Shipping Info", "Reviews"] as const;
 type Tab = (typeof tabs)[number];
 
-export function ProductTabs({ product }: { product: ProductModel }) {
+export function ProductTabs({ product }: { product: Product }) {
   const [active, setActive] = useState<Tab>("Description");
 
   return (

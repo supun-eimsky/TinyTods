@@ -1,9 +1,9 @@
 import { Product as ProductModel } from "@/models/Product";
-import type { Product as ProductCardProduct } from "@/types";
+import type { Product } from "@/types";
 import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
-  products: ProductModel[];
+  products: Array<Product | ProductModel>;
   columns?: "2-4" | "2-3-4";
 }
 
@@ -26,12 +26,10 @@ export function ProductGrid({ products, columns = "2-4" }: ProductGridProps) {
 
   return (
     <div className={gridClass}>
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product as unknown as ProductCardProduct}
-        />
-      ))}
+      {products.map((product) => {
+        const productData = product instanceof ProductModel ? product.toJSON() : product;
+        return <ProductCard key={productData.id} product={productData} />;
+      })}
     </div>
   );
 }

@@ -7,14 +7,14 @@ import { ProductPurchasePanel } from "@/components/product/ProductPurchasePanel"
 import { ProductTabs } from "@/components/product/ProductTabs";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import type { Product as ProductType } from "@/types";
 
 interface ProductPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { product } = await getProductPageData(params.id);
+  const { id } = await params;
+  const { product } = await getProductPageData(id);
   return {
     title: product.name,
     description: product.shortDescription,
@@ -22,7 +22,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { product, related } = await getProductPageData(params.id);
+  const { id } = await params;
+  const { product, related } = await getProductPageData(id);
+  const productData = product.toJSON();
+  const relatedData = related.map((item) => item.toJSON());
 
   return (
     <div className="bg-cream">
@@ -42,19 +45,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section className="container-content py-8 sm:py-12">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
-          <ProductGallery images={product.images} name={product.name} />
-          <ProductPurchasePanel product={product as unknown as ProductType} />
+          <ProductGallery images={productData.images} name={productData.name} />
+          <ProductPurchasePanel product={productData} />
         </div>
 
-        <ProductTabs product={product} />
+        <ProductTabs product={productData} />
       </section>
 
-      {related.length > 0 && (
+      {relatedData.length > 0 && (
         <section className="py-14 sm:py-20 bg-white">
           <div className="container-content">
             <SectionHeading title="You May Also Like" subtitle="More little favorites in this category." />
             <div className="mt-10">
-              <ProductGrid products={related} />
+              <ProductGrid products={relatedData} />
             </div>
           </div>
         </section>
