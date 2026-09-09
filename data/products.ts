@@ -40,7 +40,7 @@ export const products: Product[] = [
     name: "Body Suit",
     categorySlug: "clothing",
 
-    price: 26000.0,
+    price: 2600.0,
     currency: "Rs",
     rating: 4.9,
     reviewCount: 178,
