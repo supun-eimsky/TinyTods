@@ -25,33 +25,43 @@ export default function CheckoutPage() {
   const { items, isLoaded, clearCart } = useCart();
   const [form, setForm] = useState<CheckoutFormData>(emptyForm);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   function handleChange(field: keyof CheckoutFormData, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (items.length === 0) return;
     setSubmitting(true);
+    setSubmitError("");
 
     // No payment gateway involved (Cash on Delivery only), so there's
-    // nothing to charge here — we just record the order details we'd
-    // hand off to a real order-processing backend later, then clear the
-    // cart and send the shopper to a confirmation page.
+    // nothing to charge here — save the order details locally, then clear
+    // the cart and send the shopper to a confirmation page.
     const orderNumber = `TT-${Date.now().toString().slice(-6)}`;
+    const order = { orderNumber, ...form, items };
+
     try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) throw new Error("Order could not be saved");
+
       window.sessionStorage.setItem(
         "tinytods-last-order",
         JSON.stringify({ orderNumber, customerName: form.fullName, items })
       );
+      clearCart();
+      router.push(`/order-confirmation?order=${orderNumber}`);
     } catch {
-      // Non-critical — the confirmation page falls back to a generic
-      // message if this didn't save.
+      setSubmitError("We couldn't save your order. Please try again.");
+      setSubmitting(false);
     }
-
-    clearCart();
-    router.push(`/order-confirmation?order=${orderNumber}`);
   }
 
   if (!isLoaded) {
@@ -99,6 +109,8 @@ export default function CheckoutPage() {
               <Truck size={18} />
               {submitting ? "Placing Order..." : "Place Order — Pay on Delivery"}
             </button>
+
+            {submitError && <p className="text-center text-sm text-red-700">{submitError}</p>}
 
             <p className="text-center text-xs text-teal-700/50">
               By placing this order you agree to pay the total amount in cash upon delivery.
