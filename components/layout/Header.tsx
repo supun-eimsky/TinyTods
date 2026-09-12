@@ -12,7 +12,7 @@ import { getCartItemCount } from "@/lib/cart-helpers";
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Categories", href: "/categories" },
-  { label: "Offers", href: "/offers" },
+  // { label: "Offers", href: "/offers" },
   { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },
 ];

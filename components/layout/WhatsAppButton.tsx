@@ -13,7 +13,7 @@ import { MessageCircle, X, Send } from "lucide-react";
  * be in international format with no leading "+", spaces or dashes
  * (e.g. country code + number).
  */
-const WHATSAPP_NUMBER = "94715205107";
+const WHATSAPP_NUMBER = "94779955222";
 const DEFAULT_MESSAGE =
   "Hi TinyTods! I have a question about your products.";
 

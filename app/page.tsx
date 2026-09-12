@@ -15,7 +15,7 @@ export default async function HomePage() {
       <HeroSection />
       <CategorySection categories={categories} />
       <FeaturedProducts products={featuredProducts} />
-      <OffersSection offers={offers} />
+      {/* <OffersSection offers={offers} /> */}
       <WhyChooseUs />
       <BrandStory />
       <Newsletter />

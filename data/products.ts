@@ -6,17 +6,17 @@ export const products: Product[] = [
     slug: "Disney-Pixar-Baby",
     name: "Disney Pixar Baby 2-Piece Tracksuit Set ",
     categorySlug: "clothing",
-    price: 1899,
+    price: 1800,
     oldPrice: 24.99,
     currency: "Rs",
     rating: 4.8,
     reviewCount: 0,
     images: [
-
+      "/images/Disney_Pixar.jpeg",
       "/images/dexip2.jpeg",
       "/images/dexip3.jpeg",
       "/images/disney4.jpeg",
-      "/images/Disney_Pixar.jpeg",
+
     ],
     shortDescription: "Cute and comfortable set",
     description:
@@ -37,10 +37,10 @@ export const products: Product[] = [
   {
     id: "p-02",
     slug: "Body-Suit",
-    name: "Body Suit",
+    name: "Body Suit 7 Piecs Pack",
     categorySlug: "clothing",
 
-    price: 2600.0,
+    price: 1950.0,
     currency: "Rs",
     rating: 4.9,
     reviewCount: 178,
@@ -64,7 +64,7 @@ export const products: Product[] = [
     slug: "Baby-girl-frock-with-head-band",
     name: "Baby girl frock with head band",
     categorySlug: "clothing",
-    price: 1600,
+    price: 1950,
     currency: "Rs",
     rating: 4.7,
     reviewCount: 71,
@@ -86,19 +86,82 @@ export const products: Product[] = [
     slug: "Printed-T-shirt",
     name: "Printed T-shirt & pink short ",
     categorySlug: "clothing",
-    price: 1900,
+    price: 1800,
     currency: "Rs",
     rating: 4.7,
     reviewCount: 71,
     images: [
       "/images/image9.jpeg",
       "/images/image10.jpeg",
+    ],
+    shortDescription: "Soft and comfortable cotton-blend fabric with delicate floral details. ",
+    description:
+      "Soft, comfortable, and beautifully designed, this adorable outfit is made from soft and comfortable fabric with a charming floral print design. It features a delicate ruffle collar and matching ruffle details, along with long sleeves finished with elastic cuffs for a cozy and secure fit. Perfect for everyday wear and playtime, this lovely outfit keeps little ones comfortable while adding a sweet and stylish touch to their look.",
+    options: [{ label: "Size", values: ["0-3M", "3-6M", "6-9M", "9-12M", "12-18M", "18-24M"] }],
+    stock: 5,
+    isFeatured: true,
+    shippingInfo: "New Shop",
+  },
+  {
+    id: "p-05",
+    slug: "Printed-T-shirt-Dot",
+    name: "Printed T-shirt & Dot short ",
+    categorySlug: "clothing",
+    price: 1800,
+    currency: "Rs",
+    rating: 4.7,
+    reviewCount: 71,
+    images: [
+      
       "/images/image11.jpeg"
     ],
     shortDescription: "Soft and comfortable cotton-blend fabric with delicate floral details. ",
     description:
       "Soft, comfortable, and beautifully designed, this adorable outfit is made from soft and comfortable fabric with a charming floral print design. It features a delicate ruffle collar and matching ruffle details, along with long sleeves finished with elastic cuffs for a cozy and secure fit. Perfect for everyday wear and playtime, this lovely outfit keeps little ones comfortable while adding a sweet and stylish touch to their look.",
     options: [{ label: "Size", values: ["0-3M", "3-6M", "6-9M", "9-12M", "12-18M", "18-24M"] }],
+    stock: 5,
+    isFeatured: true,
+    shippingInfo: "New Shop",
+  },
+  {
+    id: "p-06",
+    slug: "PREMIUM-DENIM-DUNGAREES",
+    name: "TINY TODS | PREMIUM DENIM DUNGAREES",
+    categorySlug: "clothing",
+    price: 2400,
+    currency: "Rs",
+    rating: 4.7,
+    reviewCount: 71,
+    images: [
+      "/images/denim1.jpeg",
+      "/images/denim2.jpeg",
+      "/images/denim3.jpeg"
+    ],
+    shortDescription: "Give your little ones a stylish look with our premium denim dungarees, carefully selected for quality, comfort, and durability",
+    description:
+      "Give your little ones a stylish and comfortable look with our **Premium Denim Dungarees**, made with premium denim fabric and carefully selected for export-quality standards. 👶✨ Designed to provide a comfortable fit while being durable enough for everyday wear, these dungarees are perfect for playtime, casual outings, and everyday adventures. 💙✨ **Factory Outlet Collection** — combining quality, style, comfort, and durability in one adorable outfit.",
+    options: [{ label: "Size", values: ["03-24M"] }],
+    stock: 5,
+    isFeatured: true,
+    shippingInfo: "New Shop",
+  },
+  {
+    id: "p-07",
+    slug: "strong-Secure-Hair-Clip",
+    name: "strong & Secure Hair Clip",
+    categorySlug: "accessories",
+    price: 220,
+    currency: "Rs",
+    rating: 4.7,
+    reviewCount: 71,
+    images: [
+      "/images/image31.jpeg",
+      "/images/image30.jpeg"
+    ],
+    shortDescription: "Clip id, Style it 💙✨",
+    description:
+      "Give your little ones a stylish and comfortable look with our **high-quality collection**, designed with **soft and comfortable fabric** for all-day comfort. Featuring a **stylish and attractive design**, each piece is perfect for **everyday wear, playtime, and casual outings**. 👶✨",
+    options: [{ label: "Size", values: ["01 pair"] }],
     stock: 5,
     isFeatured: true,
     shippingInfo: "New Shop",
