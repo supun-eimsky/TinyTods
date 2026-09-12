@@ -1,19 +1,19 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { placeOrder, OrderValidationError } from "@/controllers/orderController";
 
-const ordersFile = path.join(process.cwd(), "data", "orders.json");
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const order = await request.json();
-    const orders = JSON.parse(await fs.readFile(ordersFile, "utf8")) as unknown[];
-
-    orders.push({ ...order, savedAt: new Date().toISOString() });
-    await fs.writeFile(ordersFile, `${JSON.stringify(orders, null, 2)}\n`, "utf8");
-
-    return NextResponse.json({ saved: true });
-  } catch {
-    return NextResponse.json({ saved: false, error: "Unable to save order" }, { status: 500 });
+    const body = await request.json();
+    const order = await placeOrder(body);
+    return NextResponse.json({ order }, { status: 201 });
+  } catch (error) {
+    if (error instanceof OrderValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    console.error("Failed to create order:", error);
+    return NextResponse.json(
+      { error: "Something went wrong placing your order. Please try again." },
+      { status: 500 }
+    );
   }
 }

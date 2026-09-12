@@ -1,8 +1,8 @@
-import { Category as CategoryModel } from "@/models/Category";
+import type { Category } from "@/types";
 import { CategoryCard } from "@/components/product/CategoryCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-export function CategorySection({ categories }: { categories: CategoryModel[] }) {
+export function CategorySection({ categories }: { categories: Category[] }) {
   return (
     <section className="py-16 sm:py-20 bg-cream">
       <div className="container-content">

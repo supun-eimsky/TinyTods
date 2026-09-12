@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
-import { CartProvider } from "@/context/CartContext";
 
 const baloo = Baloo_2({
   subsets: ["latin"],
@@ -42,6 +38,10 @@ export const metadata: Metadata = {
   },
 };
 
+// This root layout intentionally stays minimal — fonts and global CSS
+// only. The storefront's header/footer/cart/WhatsApp button live in
+// app/(storefront)/layout.tsx, and the admin portal has its own separate
+// layout, so neither leaks into the other.
 export default function RootLayout({
   children,
 }: {
@@ -50,18 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${baloo.variable} ${nunito.variable}`}>
       <body className="font-body bg-cream text-teal-800 antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:bg-white focus:text-teal-800 focus:px-4 focus:py-2 focus:rounded-full"
-        >
-          Skip to main content
-        </a>
-        <CartProvider>
-          <Header />
-          <main id="main-content">{children}</main>
-          <Footer />
-          <WhatsAppButton />
-        </CartProvider>
+        {children}
       </body>
     </html>
   );

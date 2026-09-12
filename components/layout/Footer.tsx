@@ -20,7 +20,7 @@ const careLinks = [
 export function Footer() {
   return (
     <footer className="relative bg-teal-800 text-cream pt-16 pb-8 overflow-hidden">
-      <div
+      {/* <div
         className="absolute -top-1 left-0 right-0 h-4 text-teal-800"
         style={{
           backgroundImage:
@@ -29,7 +29,7 @@ export function Footer() {
           backgroundRepeat: "repeat-x",
         }}
         aria-hidden="true"
-      />
+      /> */}
       <div className="container-content grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         <div>
           <div className="flex items-center gap-3">

@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { Category as CategoryModel } from "@/models/Category";
-import { Product as ProductModel } from "@/models/Product";
+import type { Category, Product } from "@/types";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { FilterDrawer } from "./FilterDrawer";
 import { cn } from "@/lib/utils";
@@ -24,8 +23,8 @@ export function CategoriesExplorer({
   products,
   initialCategory,
 }: {
-  categories: CategoryModel[];
-  products: ProductModel[];
+  categories: Category[];
+  products: Product[];
   initialCategory?: string;
 }) {
   const [activeCategory, setActiveCategory] = useState<string | undefined>(initialCategory);

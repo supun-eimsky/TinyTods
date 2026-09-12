@@ -12,6 +12,12 @@ interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
+// See the comment on this same export in app/(storefront)/page.tsx —
+// products are admin-managed in MySQL, and a product's price, stock or
+// details can change at any time, so this page must always render fresh
+// rather than serve a build-time snapshot.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { id } = await params;
   const { product } = await getProductPageData(id);
@@ -24,8 +30,6 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
   const { product, related } = await getProductPageData(id);
-  const productData = product.toJSON();
-  const relatedData = related.map((item) => item.toJSON());
 
   return (
     <div className="bg-cream">
@@ -45,19 +49,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section className="container-content py-8 sm:py-12">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
-          <ProductGallery images={productData.images} name={productData.name} />
-          <ProductPurchasePanel product={productData} />
+          <ProductGallery images={product.images} name={product.name} />
+          <ProductPurchasePanel product={product} />
         </div>
 
-        <ProductTabs product={productData} />
+        <ProductTabs product={product} />
       </section>
 
-      {relatedData.length > 0 && (
+      {related.length > 0 && (
         <section className="py-14 sm:py-20 bg-white">
           <div className="container-content">
             <SectionHeading title="You May Also Like" subtitle="More little favorites in this category." />
             <div className="mt-10">
-              <ProductGrid products={relatedData} />
+              <ProductGrid products={related} />
             </div>
           </div>
         </section>

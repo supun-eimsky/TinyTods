@@ -2,7 +2,7 @@ export function cn(...classes: Array<string | false | null | undefined>): string
   return classes.filter(Boolean).join(" ");
 }
 
-export function formatCurrency(amount: number, currency = "$"): string {
+export function formatCurrency(amount: number, currency = "Rs"): string {
   return `${currency}${amount.toFixed(2)}`;
 }
 

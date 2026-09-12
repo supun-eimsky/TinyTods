@@ -6,18 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "mysql -u root -p tinytods < database/schema.sql && mysql -u root -p tinytods < database/seed.sql"
   },
   "dependencies": {
     "lucide-react": "^0.400.0",
     "next": "^16.3.4",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "mysql2": "^3.11.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.6.3"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/bcryptjs": "^2.4.6",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",

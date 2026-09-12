@@ -1,14 +1,14 @@
 "use client";
 
 import { X } from "lucide-react";
-import { Category as CategoryModel } from "@/models/Category";
+import type { Category } from "@/types";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 
 interface FilterDrawerProps {
   open: boolean;
   onClose: () => void;
-  categories: CategoryModel[];
+  categories: Category[];
   activeCategory?: string;
   onSelectCategory: (slug: string | undefined) => void;
 }

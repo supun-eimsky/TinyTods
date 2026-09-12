@@ -25,7 +25,7 @@ export default function CheckoutPage() {
   const { items, isLoaded, clearCart } = useCart();
   const [form, setForm] = useState<CheckoutFormData>(emptyForm);
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(field: keyof CheckoutFormData, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -35,31 +35,37 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (items.length === 0) return;
     setSubmitting(true);
-    setSubmitError("");
-
-    // No payment gateway involved (Cash on Delivery only), so there's
-    // nothing to charge here — save the order details locally, then clear
-    // the cart and send the shopper to a confirmation page.
-    const orderNumber = `TT-${Date.now().toString().slice(-6)}`;
-    const order = { orderNumber, ...form, items };
+    setError(null);
 
     try {
+      // Cash on Delivery only — no payment gateway to call here. This
+      // persists the order (and its line items) in MySQL via /api/orders,
+      // then sends the shopper to the confirmation page, which fetches
+      // the just-created order back from the same API to display it.
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order),
+        body: JSON.stringify({
+          customerName: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          city: form.city,
+          postalCode: form.postalCode,
+          notes: form.notes,
+          items,
+        }),
       });
 
-      if (!response.ok) throw new Error("Order could not be saved");
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error ?? "Something went wrong placing your order.");
+      }
 
-      window.sessionStorage.setItem(
-        "tinytods-last-order",
-        JSON.stringify({ orderNumber, customerName: form.fullName, items })
-      );
       clearCart();
-      router.push(`/order-confirmation?order=${orderNumber}`);
-    } catch {
-      setSubmitError("We couldn't save your order. Please try again.");
+      router.push(`/order-confirmation?order=${data.order.orderNumber}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong placing your order.");
       setSubmitting(false);
     }
   }
@@ -101,6 +107,10 @@ export default function CheckoutPage() {
           <div className="lg:col-span-1 space-y-4">
             <OrderSummary items={items} currency={currency} />
 
+            {error && (
+              <p className="text-sm text-peach bg-white rounded-2xl px-4 py-3 shadow-card">{error}</p>
+            )}
+
             <button
               type="submit"
               disabled={submitting}
@@ -109,8 +119,6 @@ export default function CheckoutPage() {
               <Truck size={18} />
               {submitting ? "Placing Order..." : "Place Order — Pay on Delivery"}
             </button>
-
-            {submitError && <p className="text-center text-sm text-red-700">{submitError}</p>}
 
             <p className="text-center text-xs text-teal-700/50">
               By placing this order you agree to pay the total amount in cash upon delivery.
