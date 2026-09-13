@@ -7,7 +7,6 @@ export const products: Product[] = [
     name: "Disney Pixar Baby 2-Piece Tracksuit Set ",
     categorySlug: "clothing",
     price: 1800,
-    oldPrice: 24.99,
     currency: "Rs",
     rating: 4.8,
     reviewCount: 0,
@@ -140,7 +139,7 @@ export const products: Product[] = [
     shortDescription: "Give your little ones a stylish look with our premium denim dungarees, carefully selected for quality, comfort, and durability",
     description:
       "Give your little ones a stylish and comfortable look with our **Premium Denim Dungarees**, made with premium denim fabric and carefully selected for export-quality standards. 👶✨ Designed to provide a comfortable fit while being durable enough for everyday wear, these dungarees are perfect for playtime, casual outings, and everyday adventures. 💙✨ **Factory Outlet Collection** — combining quality, style, comfort, and durability in one adorable outfit.",
-    options: [{ label: "Size", values: ["03-24M"] }],
+    options: [{ label: "Size", values: ["0-3M", "3-6M", "6-9M", "9-12M", "12-18M", "18-24M"] }],
     stock: 5,
     isFeatured: true,
     shippingInfo: "New Shop",
