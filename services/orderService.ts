@@ -135,7 +135,7 @@ export const OrderService = {
       await connection.beginTransaction();
 
       operation = "creating order";
-      const [orderResult] = await connection.execute(
+      const [orderResult] = await connection.query(
         `INSERT INTO orders
           (order_number, customer_name, email, phone, address, city, postal_code, notes, currency, item_total, discount_total, shipping_total, grand_total, payment_method, status)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'cod', 'pending')`,
@@ -155,21 +155,21 @@ export const OrderService = {
           grandTotal,
         ]
       );
-      // mysql2's execute() typing needs a cast here since it doesn't know
+      // mysql2's query() typing needs a cast here since it doesn't know
       // this particular query returns a ResultSetHeader.
       const orderId = (orderResult as unknown as { insertId: number }).insertId;
 
       for (const item of items) {
         const slug = typeof item.slug === "string" ? item.slug.trim() : "";
         operation = `resolving product for ${slug || item.name}`;
-        const [productRows] = await connection.execute(
+        const [productRows] = await connection.query(
           "SELECT id FROM products WHERE slug = ? LIMIT 1",
           [slug]
         );
         const productId = (productRows as Array<{ id: number }>)[0]?.id ?? null;
 
         operation = `creating order item for ${item.name}`;
-        await connection.execute(
+        await connection.query(
           `INSERT INTO order_items (order_id, product_id, name, image, price, old_price, quantity, selected_options)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [

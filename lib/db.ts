@@ -78,7 +78,8 @@ export async function execute(
 ): Promise<mysql.ResultSetHeader> {
   const connection = await getConnection();
   try {
-    const [result] = await connection.execute(sql, params);
+    // Hyperdrive does not support MySQL prepared statements (COM_STMT_PREPARE).
+    const [result] = await connection.query(sql, params);
     return result as mysql.ResultSetHeader;
   } finally {
     await connection.end();
