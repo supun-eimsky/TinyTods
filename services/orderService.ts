@@ -130,9 +130,11 @@ export const OrderService = {
     const orderNumber = generateOrderNumber();
 
     const connection = await getConnection();
+    let operation = "starting transaction";
     try {
       await connection.beginTransaction();
 
+      operation = "creating order";
       const [orderResult] = await connection.execute(
         `INSERT INTO orders
           (order_number, customer_name, email, phone, address, city, postal_code, notes, currency, item_total, discount_total, shipping_total, grand_total, payment_method, status)
@@ -158,12 +160,15 @@ export const OrderService = {
       const orderId = (orderResult as unknown as { insertId: number }).insertId;
 
       for (const item of items) {
+        const slug = typeof item.slug === "string" ? item.slug.trim() : "";
+        operation = `resolving product for ${slug || item.name}`;
         const [productRows] = await connection.execute(
           "SELECT id FROM products WHERE slug = ? LIMIT 1",
-          [item.slug]
+          [slug]
         );
         const productId = (productRows as Array<{ id: number }>)[0]?.id ?? null;
 
+        operation = `creating order item for ${item.name}`;
         await connection.execute(
           `INSERT INTO order_items (order_id, product_id, name, image, price, old_price, quantity, selected_options)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -180,14 +185,19 @@ export const OrderService = {
         );
       }
 
+      operation = "committing order";
       await connection.commit();
 
+      operation = "loading created order";
       const created = await this.getByOrderNumber(orderNumber);
       if (!created) throw new Error("Failed to load newly created order.");
       return created;
     } catch (error) {
-      await connection.rollback();
-      throw error;
+      try {
+        await connection.rollback();
+      } catch {}
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Order creation failed while ${operation}: ${message}`, { cause: error });
     } finally {
       await connection.end();
     }

@@ -10,7 +10,15 @@ export async function POST(request: NextRequest) {
     if (error instanceof OrderValidationError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
-    console.error("Failed to create order:", error);
+    const details = error instanceof Error
+      ? {
+          name: error.name,
+          message: error.message,
+          cause: error.cause instanceof Error ? error.cause.message : error.cause,
+          stack: error.stack,
+        }
+      : { message: String(error) };
+    console.error("Failed to create order", details);
     return NextResponse.json(
       { error: "Something went wrong placing your order. Please try again." },
       { status: 500 }
