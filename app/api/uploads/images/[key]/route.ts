@@ -1,8 +1,6 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ key: string }> }
@@ -15,10 +13,10 @@ export async function GET(
   try {
     const { env } = getCloudflareContext();
     const images = env.IMAGES ?? env.tinytods_images;
-    if (!images) return new NextResponse("Image storage is not configured", { status: 503 });
+    if (!images) return new Response("Image storage is not configured", { status: 503 });
 
     const image = await images.get(key);
-    if (!image) return new NextResponse("Not found", { status: 404 });
+    if (!image) return new Response("Not found", { status: 404 });
 
     const headers = new Headers();
     image.writeHttpMetadata(headers);
