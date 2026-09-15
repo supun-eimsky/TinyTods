@@ -3,6 +3,12 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 type QueryParameter = string | number | boolean | null | Buffer | Date;
 
+function removeUnsupportedMysqlOptions(connectionString: string): string {
+  const url = new URL(connectionString);
+  url.searchParams.delete("ssl-mode");
+  return url.toString();
+}
+
 /**
  * Resolves the MySQL connection string.
  *
@@ -20,7 +26,7 @@ function getConnectionString(): string {
   try {
     const { env } = getCloudflareContext();
     if (env.HYPERDRIVE?.connectionString) {
-      return env.HYPERDRIVE.connectionString;
+      return removeUnsupportedMysqlOptions(env.HYPERDRIVE.connectionString);
     }
   } catch {
     // Not running inside a Cloudflare context (e.g. plain `next dev`) — fall through.

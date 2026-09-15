@@ -3899,12 +3899,12 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
+    ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
       "bytes": 307,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
+    ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
       "bytes": 307,
       "imports": [],
       "format": "cjs"
@@ -3988,14 +3988,14 @@
           "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\orders\\[id]\\route_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\auth\\logout\\route_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\auth\\signup\\route_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\auth\\logout\\route_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/api/admin/categories/route_client-reference-manifest.js",
@@ -4804,7 +4804,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/_05_nuqd._.js": {
-      "bytes": 808429,
+      "bytes": 808505,
       "imports": [],
       "format": "cjs"
     },
@@ -5713,7 +5713,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/_018fka2._.js": {
-      "bytes": 808422,
+      "bytes": 808498,
       "imports": [],
       "format": "cjs"
     },
@@ -13085,10 +13085,10 @@
         ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
-        ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
+        ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
-        ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
+        ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
         ".open-next/server-functions/default/.next/server/app/api/admin/categories/route_client-reference-manifest.js": {
@@ -13257,7 +13257,7 @@
           "bytesInOutput": 13276
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_05_nuqd._.js": {
-          "bytesInOutput": 1035737
+          "bytesInOutput": 1035819
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_1mhojv8._.js": {
           "bytesInOutput": 13152
@@ -13431,7 +13431,7 @@
           "bytesInOutput": 11911
         },
         ".open-next/server-functions/default/.next/server/chunks/_018fka2._.js": {
-          "bytesInOutput": 1035726
+          "bytesInOutput": 1035808
         },
         ".open-next/server-functions/default/.next/server/chunks/_1759pgo._.js": {
           "bytesInOutput": 45114
@@ -13815,7 +13815,7 @@
           "bytesInOutput": 70357
         }
       },
-      "bytes": 6712868
+      "bytes": 6713032
     }
   }
 }
