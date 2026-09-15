@@ -1,4 +1,4 @@
-import { query, execute, getPool } from "@/lib/db";
+import { query, execute, getConnection } from "@/lib/db";
 import { CartItem, CreateOrderInput, OrderItemRecord, OrderRecord, OrderStatus } from "@/types";
 import {
   getCartSubtotal,
@@ -129,8 +129,7 @@ export const OrderService = {
     const grandTotal = getCartTotal(items);
     const orderNumber = generateOrderNumber();
 
-    const pool = getPool();
-    const connection = await pool.getConnection();
+    const connection = await getConnection();
     try {
       await connection.beginTransaction();
 
@@ -159,12 +158,18 @@ export const OrderService = {
       const orderId = (orderResult as unknown as { insertId: number }).insertId;
 
       for (const item of items) {
+        const [productRows] = await connection.execute(
+          "SELECT id FROM products WHERE slug = ? LIMIT 1",
+          [item.slug]
+        );
+        const productId = (productRows as Array<{ id: number }>)[0]?.id ?? null;
+
         await connection.execute(
           `INSERT INTO order_items (order_id, product_id, name, image, price, old_price, quantity, selected_options)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             orderId,
-            Number(item.productId) || null,
+            productId,
             item.name,
             item.image,
             item.price,
@@ -184,7 +189,7 @@ export const OrderService = {
       await connection.rollback();
       throw error;
     } finally {
-      connection.release();
+      await connection.end();
     }
   },
 
