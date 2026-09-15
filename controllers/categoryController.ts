@@ -32,8 +32,5 @@ export async function getCategoryPageData(filters: CategoryPageFilters) {
       break;
   }
 
-   return {
-    categories: JSON.parse(JSON.stringify(categories)),
-    products: JSON.parse(JSON.stringify(products)),
-  };
+  return { categories, products };
 }

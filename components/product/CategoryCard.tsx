@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Category as CategoryModel } from "@/models/Category";
+import type { Category } from "@/types";
 
 const accentBg: Record<string, string> = {
   mint: "bg-mint-light",
@@ -10,10 +10,10 @@ const accentBg: Record<string, string> = {
   sage: "bg-sage",
 };
 
-export function CategoryCard({ category }: { category: CategoryModel }) {
+export function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
-      href={category.href}
+      href={`/categories?category=${category.slug}`}
       className="group relative flex flex-col items-center text-center rounded-4xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift"
       style={{ backgroundColor: "transparent" }}
     >

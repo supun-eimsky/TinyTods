@@ -1,9 +1,9 @@
-import { Product as ProductModel } from "@/models/Product";
+import type { Product } from "@/types";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 
-export function FeaturedProducts({ products }: { products: ProductModel[] }) {
+export function FeaturedProducts({ products }: { products: Product[] }) {
   return (
     <section className="py-16 sm:py-20 bg-white">
       <div className="container-content">

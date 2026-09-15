@@ -6,15 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "db:seed": "mysql -u root -p tinytods < database/schema.sql && mysql -u root -p tinytods < database/seed.sql"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.6.3",
     "lucide-react": "^0.400.0",
+    "mysql2": "^3.11.0",
     "next": "^16.3.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -23,6 +30,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "wrangler": "^4.131.2"
   }
 }
