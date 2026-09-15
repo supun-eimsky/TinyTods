@@ -1,0 +1,17 @@
+{
+  "name": "tinytods",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "e0b253d05d2d4671b40607eb6e634c80",
+      "localConnectionString": "mysql://admin:htSZR7PmXKeBj4cujkaE@database-1.c900wacouy45.eu-north-1.rds.amazonaws.com:3306/tinytods"
+    }
+  ]
+}
