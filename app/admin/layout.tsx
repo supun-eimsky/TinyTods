@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LiveDataRefresh } from "@/components/layout/LiveDataRefresh";
 
 export const dynamic = "force-dynamic";
 
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 // down, in app/admin/(dashboard)/layout.tsx, so the public login/signup
 // pages stay chrome-free too.
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-sage/30">{children}</div>;
+  return (
+    <div className="min-h-screen bg-sage/30">
+      <LiveDataRefresh />
+      {children}
+    </div>
+  );
 }

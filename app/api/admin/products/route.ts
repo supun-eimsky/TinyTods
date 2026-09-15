@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   listProductsForAdmin,
   createProductAsAdmin,
@@ -8,7 +9,10 @@ import {
 export async function GET() {
   try {
     const products = await listProductsForAdmin();
-    return NextResponse.json({ products });
+    return NextResponse.json(
+      { products },
+      { headers: { "Cache-Control": "no-store, max-age=0" } }
+    );
   } catch (error) {
     console.error("Failed to list products:", error);
     return NextResponse.json({ error: "Failed to load products." }, { status: 500 });
@@ -19,6 +23,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const product = await createProductAsAdmin(body);
+    revalidatePath("/");
+    revalidatePath("/categories");
+    revalidatePath("/offers");
+    revalidatePath("/admin/products");
+    revalidatePath(`/product/${product.slug}`);
     return NextResponse.json({ product }, { status: 201 });
   } catch (error) {
     if (error instanceof ProductValidationError) {

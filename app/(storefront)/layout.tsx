@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { LiveDataRefresh } from "@/components/layout/LiveDataRefresh";
 import { CartProvider } from "@/context/CartContext";
 
 export const dynamic = "force-dynamic";
@@ -59,6 +60,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <CartProvider>
+          <LiveDataRefresh />
           <Header />
           <main id="main-content">{children}</main>
           <Footer />

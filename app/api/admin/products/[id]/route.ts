@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   getProductForAdmin,
   updateProductAsAdmin,
@@ -13,7 +14,10 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     if (!product) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }
-    return NextResponse.json({ product });
+    return NextResponse.json(
+      { product },
+      { headers: { "Cache-Control": "no-store, max-age=0" } }
+    );
   } catch (error) {
     console.error("Failed to load product:", error);
     return NextResponse.json({ error: "Failed to load product." }, { status: 500 });
@@ -25,7 +29,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const body = await request.json();
     const product = await updateProductAsAdmin(Number(id), body);
-    return NextResponse.json({ product });
+    revalidateProductPages(product.slug);
+    return NextResponse.json({ product }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof ProductValidationError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
@@ -38,10 +43,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    const product = await getProductForAdmin(Number(id));
     await deleteProductAsAdmin(Number(id));
+    if (product) revalidateProductPages(product.slug);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete product:", error);
     return NextResponse.json({ error: "Failed to delete product." }, { status: 500 });
   }
+}
+
+function revalidateProductPages(slug: string) {
+  revalidatePath("/");
+  revalidatePath("/categories");
+  revalidatePath("/offers");
+  revalidatePath("/admin/products");
+  revalidatePath(`/product/${slug}`);
 }
