@@ -36,14 +36,15 @@ export async function POST(request: NextRequest) {
     }
 
     const { env } = getCloudflareContext();
-    if (!env.IMAGES) {
+    const images = env.IMAGES ?? env.tinytods_images;
+    if (!images) {
       throw new Error("The IMAGES R2 bucket is not configured.");
     }
 
     const paths = await Promise.all(
       files.map(async (file) => {
         const filename = `${randomUUID()}${EXTENSIONS[file.type]}`;
-        await env.IMAGES.put(filename, await file.arrayBuffer(), {
+        await images.put(filename, await file.arrayBuffer(), {
           httpMetadata: { contentType: file.type },
         });
         return `/api/uploads/images/${filename}`;

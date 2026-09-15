@@ -14,7 +14,10 @@ export async function GET(
 
   try {
     const { env } = getCloudflareContext();
-    const image = await env.IMAGES?.get(key);
+    const images = env.IMAGES ?? env.tinytods_images;
+    if (!images) return new NextResponse("Image storage is not configured", { status: 503 });
+
+    const image = await images.get(key);
     if (!image) return new NextResponse("Not found", { status: 404 });
 
     const headers = new Headers();
@@ -23,7 +26,8 @@ export async function GET(
     headers.set("cache-control", "public, max-age=31536000, immutable");
     return new NextResponse(image.body, { headers });
   } catch (error) {
-    console.error("Failed to load product image:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Failed to load product image", { key, message, error });
     return NextResponse.json({ error: "Failed to load image." }, { status: 500 });
   }
 }

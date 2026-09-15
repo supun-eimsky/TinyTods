@@ -4,6 +4,7 @@ interface __BaseEnv_CloudflareEnv {
 	HYPERDRIVE: Hyperdrive;
 	ASSETS: Fetcher;
 	IMAGES: R2Bucket;
+	tinytods_images: R2Bucket;
 	DB_HOST: string;
 	DB_PORT: string;
 	DB_USER: string;
