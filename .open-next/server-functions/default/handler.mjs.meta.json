@@ -3950,7 +3950,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 146694,
+      "bytes": 135298,
       "imports": [
         {
           "path": "path",
@@ -4687,7 +4687,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/_1ez4mhr._.js": {
-      "bytes": 7363,
+      "bytes": 7391,
       "imports": [],
       "format": "cjs"
     },
@@ -5277,7 +5277,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/app_admin_layout_tsx_1moen81._.js": {
-      "bytes": 442,
+      "bytes": 470,
       "imports": [],
       "format": "cjs"
     },
@@ -10529,7 +10529,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 98651,
+      "bytes": 93053,
       "imports": [
         {
           "path": "node:module",
@@ -13203,7 +13203,7 @@
           "bytesInOutput": 446
         },
         ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-          "bytesInOutput": 117768
+          "bytesInOutput": 111689
         },
         ".open-next/cloudflare-templates/shims/throw.js": {
           "bytesInOutput": 215
@@ -13317,7 +13317,7 @@
           "bytesInOutput": 12703
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_1ez4mhr._.js": {
-          "bytesInOutput": 7484
+          "bytesInOutput": 7512
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_(storefront)_about_page_actions_0bhpw00.js": {
           "bytesInOutput": 285
@@ -13437,7 +13437,7 @@
           "bytesInOutput": 303
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/app_admin_layout_tsx_1moen81._.js": {
-          "bytesInOutput": 568
+          "bytesInOutput": 596
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_0juh33g._.js": {
           "bytesInOutput": 52999
@@ -13911,10 +13911,10 @@
           "bytesInOutput": 5074
         },
         ".open-next/server-functions/default/index.mjs": {
-          "bytesInOutput": 70589
+          "bytesInOutput": 65761
         }
       },
-      "bytes": 6744958
+      "bytes": 6734107
     }
   }
 }

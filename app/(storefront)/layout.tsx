@@ -6,6 +6,8 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartProvider } from "@/context/CartContext";
 
+export const dynamic = "force-dynamic";
+
 const baloo = Baloo_2({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
