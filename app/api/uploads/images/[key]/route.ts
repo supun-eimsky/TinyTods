@@ -24,7 +24,7 @@ export async function GET(
     image.writeHttpMetadata(headers);
     headers.set("etag", image.httpEtag);
     headers.set("cache-control", "public, max-age=31536000, immutable");
-    return new NextResponse(image.body, { headers });
+    return new Response(image.body, { headers });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Failed to load product image", { key, message, error });
