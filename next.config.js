@@ -4,6 +4,11 @@ initOpenNextCloudflareForDev();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    // TypeScript runs as an explicit build step below; this avoids Next's
+    // recursive check of generated .next/dev/types on hosted Node 24 builds.
+    ignoreBuildErrors: true,
+  },
   images: {
     // OpenNext serves image files through the Worker assets binding; the
     // Next.js optimizer endpoint is not available in this deployment.

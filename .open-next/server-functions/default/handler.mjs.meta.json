@@ -3894,17 +3894,17 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js": {
+      "bytes": 307,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
       "bytes": 307,
       "imports": [],
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
-      "bytes": 307,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js": {
       "bytes": 307,
       "imports": [],
       "format": "cjs"
@@ -3945,7 +3945,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 147858,
+      "bytes": 147857,
       "imports": [
         {
           "path": "path",
@@ -3983,6 +3983,11 @@
           "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\products\\[id]\\route_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\orders\\[id]\\route_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\auth\\signup\\route_client-reference-manifest.js"
@@ -3991,11 +3996,6 @@
           "path": ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\auth\\logout\\route_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "C:\\Eimsky\\my\\tinytods\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\admin\\orders\\[id]\\route_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/api/admin/categories/route_client-reference-manifest.js",
@@ -10427,7 +10427,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 99999,
+      "bytes": 99998,
       "imports": [
         {
           "path": "node:module",
@@ -13062,13 +13062,13 @@
         ".open-next/server-functions/default/.next/server/app/api/admin/products/[id]/route_client-reference-manifest.js": {
           "bytesInOutput": 471
         },
+        ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js": {
+          "bytesInOutput": 467
+        },
         ".open-next/server-functions/default/.next/server/app/api/admin/auth/signup/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
         ".open-next/server-functions/default/.next/server/app/api/admin/auth/logout/route_client-reference-manifest.js": {
-          "bytesInOutput": 467
-        },
-        ".open-next/server-functions/default/.next/server/app/api/admin/orders/[id]/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
         ".open-next/server-functions/default/.next/server/app/api/admin/categories/route_client-reference-manifest.js": {
