@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextRequest, NextResponse } from "next/server";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -36,14 +35,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const imageDirectory = path.join(process.cwd(), "public", "images");
-    await mkdir(imageDirectory, { recursive: true });
+    const { env } = getCloudflareContext();
+    if (!env.IMAGES) {
+      throw new Error("The IMAGES R2 bucket is not configured.");
+    }
 
     const paths = await Promise.all(
       files.map(async (file) => {
         const filename = `${randomUUID()}${EXTENSIONS[file.type]}`;
-        await writeFile(path.join(imageDirectory, filename), Buffer.from(await file.arrayBuffer()));
-        return `/images/${filename}`;
+        await env.IMAGES.put(filename, await file.arrayBuffer(), {
+          httpMetadata: { contentType: file.type },
+        });
+        return `/api/uploads/images/${filename}`;
       })
     );
 
