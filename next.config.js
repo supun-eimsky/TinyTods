@@ -5,6 +5,9 @@ initOpenNextCloudflareForDev();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // OpenNext serves image files through the Worker assets binding; the
+    // Next.js optimizer endpoint is not available in this deployment.
+    unoptimized: true,
     // Admins can add products with images hosted anywhere (their own
     // storage, a CDN, etc.) through the admin portal, not just Unsplash —
     // so this allows any HTTPS host rather than an allowlist that would
