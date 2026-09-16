@@ -60,7 +60,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <CartProvider>
-          <LiveDataRefresh />
+          {/* <LiveDataRefresh /> */}
           <Header />
           <main id="main-content">{children}</main>
           <Footer />

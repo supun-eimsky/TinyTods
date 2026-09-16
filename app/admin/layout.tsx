@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-sage/30">
-      <LiveDataRefresh />
+      {/* <LiveDataRefresh /> */}
       {children}
     </div>
   );
