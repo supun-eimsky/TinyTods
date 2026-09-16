@@ -64,7 +64,12 @@ export function getConnection(): Promise<mysql.Connection> {
 export async function query<T = unknown>(sql: string, params: QueryParameter[] = []): Promise<T[]> {
   const connection = await getConnection();
   try {
-    const [rows] = await connection.query(sql, params);
+    // Hyperdrive may cache read queries. This app needs admin changes to be
+    // visible immediately, so make each SELECT a distinct cache key.
+    const uncachedSql = /^\s*SELECT\b/i.test(sql)
+      ? `${sql} /* fresh-read-${Date.now()}-${Math.random()} */`
+      : sql;
+    const [rows] = await connection.query(uncachedSql, params);
     return rows as T[];
   } finally {
     await connection.end();
