@@ -89,6 +89,7 @@ export const ProductService = {
 
   async getById(id: number): Promise<Product | null> {
     const rows = await query<ProductRow>("SELECT * FROM products WHERE id = ? LIMIT 1", [id]);
+      console.log(rows,"hdhdhdhdhdhdhdhdhdhdhdh")
     return rows[0] ? mapRow(rows[0]) : null;
   },
 
