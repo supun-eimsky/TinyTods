@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
-
+import { FaTiktok } from "react-icons/fa";
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Categories", href: "/categories" },
@@ -43,10 +43,10 @@ export function Footer() {
             Carefully chosen baby products, made for tiny moments and big smiles.
           </p>
           <div className="flex items-center gap-3 mt-5">
-            {[Facebook, Instagram, MessageCircle].map((Icon, i) => (
+            {[Facebook, Instagram, FaTiktok].map((Icon, i) => (
               <a
                 key={i}
-                href="#"
+                href={["https://www.facebook.com/share/1DdchMzf3y/", "https://www.instagram.com", "https://www.tiktok.com/@susiiresha?_r=1&_t=ZS-99mus25nooR"][i]}
                 aria-label="Follow TinyTods on social media"
                 className="w-9 h-9 inline-flex items-center justify-center rounded-full bg-white/10 hover:bg-sunshine hover:text-teal-800 transition-colors"
               >
