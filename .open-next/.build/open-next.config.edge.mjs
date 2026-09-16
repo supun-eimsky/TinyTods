@@ -1,3 +1,13 @@
+var __defProp = Object.defineProperty;
+var __typeError = (msg) => {
+  throw TypeError(msg);
+};
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
+var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
+
 // node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js
 var cloudflareContextSymbol = Symbol.for("__cloudflare-context__");
 function getCloudflareContext(options = { async: false }) {
@@ -208,11 +218,391 @@ function resolveCdnInvalidation(value = "dummy") {
   return typeof value === "function" ? value : () => value;
 }
 
+// node_modules/@opennextjs/aws/dist/utils/error.js
+var IgnorableError = class extends Error {
+  constructor(message) {
+    super(message);
+    __publicField(this, "__openNextInternal", true);
+    __publicField(this, "canIgnore", true);
+    __publicField(this, "logLevel", 0);
+    this.name = "IgnorableError";
+  }
+};
+function isOpenNextError(e) {
+  try {
+    return "__openNextInternal" in e;
+  } catch {
+    return false;
+  }
+}
+
+// node_modules/@opennextjs/aws/dist/adapters/logger.js
+function debug(...args) {
+  if (globalThis.openNextDebug) {
+    console.log(...args);
+  }
+}
+function warn(...args) {
+  console.warn(...args);
+}
+var DOWNPLAYED_ERROR_LOGS = [
+  {
+    clientName: "S3Client",
+    commandName: "GetObjectCommand",
+    errorName: "NoSuchKey"
+  }
+];
+var isDownplayedErrorLog = (errorLog) => DOWNPLAYED_ERROR_LOGS.some((downplayedInput) => downplayedInput.clientName === errorLog?.clientName && downplayedInput.commandName === errorLog?.commandName && (downplayedInput.errorName === errorLog?.error?.name || downplayedInput.errorName === errorLog?.error?.Code));
+function error(...args) {
+  if (args.some((arg) => isDownplayedErrorLog(arg))) {
+    return debug(...args);
+  }
+  if (args.some((arg) => isOpenNextError(arg))) {
+    const error2 = args.find((arg) => isOpenNextError(arg));
+    if (error2.logLevel < getOpenNextErrorLogLevel()) {
+      return;
+    }
+    if (error2.logLevel === 0) {
+      return console.log(...args.map((arg) => isOpenNextError(arg) ? `${arg.name}: ${arg.message}` : arg));
+    }
+    if (error2.logLevel === 1) {
+      return warn(...args.map((arg) => isOpenNextError(arg) ? `${arg.name}: ${arg.message}` : arg));
+    }
+    return console.error(...args);
+  }
+  console.error(...args);
+}
+function getOpenNextErrorLogLevel() {
+  const strLevel = process.env.OPEN_NEXT_ERROR_LOG_LEVEL ?? "1";
+  switch (strLevel.toLowerCase()) {
+    case "debug":
+    case "0":
+      return 0;
+    case "error":
+    case "2":
+      return 2;
+    default:
+      return 1;
+  }
+}
+
+// node_modules/@opennextjs/cloudflare/dist/api/overrides/internal.js
+import { createHash } from "node:crypto";
+var debugCache = (name, ...args) => {
+  if (process.env.NEXT_PRIVATE_DEBUG_CACHE) {
+    console.log(`[${name}] `, ...args);
+  }
+};
+var FALLBACK_BUILD_ID = "no-build-id";
+var DEFAULT_PREFIX = "incremental-cache";
+function computeCacheKey(key, options) {
+  const { cacheType = "cache", prefix = DEFAULT_PREFIX, buildId = FALLBACK_BUILD_ID } = options;
+  const hash = createHash("sha256").update(key).digest("hex");
+  return `${prefix}/${buildId}/${hash}.${cacheType}`.replace(/\/+/g, "/");
+}
+function isPurgeCacheEnabled() {
+  const cdnInvalidation = globalThis.openNextConfig?.default?.override?.cdnInvalidation;
+  return cdnInvalidation !== void 0 && cdnInvalidation !== "dummy";
+}
+async function purgeCacheByTags(tags) {
+  const { env } = getCloudflareContext();
+  if (env.NEXT_CACHE_DO_PURGE) {
+    const durableObject = env.NEXT_CACHE_DO_PURGE;
+    const id = durableObject.idFromName("cache-purge");
+    const obj = durableObject.get(id);
+    await obj.purgeCacheByTags(tags);
+  } else {
+    await internalPurgeCacheByTags(env, tags);
+  }
+}
+async function internalPurgeCacheByTags(env, tags) {
+  if (!env.CACHE_PURGE_ZONE_ID || !env.CACHE_PURGE_API_TOKEN) {
+    error("No cache zone ID or API token provided. Skipping cache purge.");
+    return "missing-credentials";
+  }
+  let response;
+  try {
+    response = await fetch(`https://api.cloudflare.com/client/v4/zones/${env.CACHE_PURGE_ZONE_ID}/purge_cache`, {
+      headers: {
+        Authorization: `Bearer ${env.CACHE_PURGE_API_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        tags
+      })
+    });
+    if (response.status === 429) {
+      error("purgeCacheByTags: Rate limit exceeded. Skipping cache purge.");
+      return "rate-limit-exceeded";
+    }
+    const bodyResponse = await response.json();
+    if (!bodyResponse.success) {
+      error("purgeCacheByTags: Cache purge failed. Errors:", bodyResponse.errors.map((error2) => `${error2.code}: ${error2.message}`));
+      return "purge-failed";
+    }
+    debugCache("purgeCacheByTags", "Cache purged successfully for tags:", tags);
+    return "purge-success";
+  } catch (error2) {
+    console.error("Error purging cache by tags:", error2);
+    return "purge-failed";
+  } finally {
+    try {
+      await response?.body?.cancel();
+    } catch {
+    }
+  }
+}
+
+// node_modules/@opennextjs/cloudflare/dist/api/overrides/incremental-cache/r2-incremental-cache.js
+var NAME = "cf-r2-incremental-cache";
+var BINDING_NAME = "NEXT_INC_CACHE_R2_BUCKET";
+var PREFIX_ENV_NAME = "NEXT_INC_CACHE_R2_PREFIX";
+var R2IncrementalCache = class {
+  constructor() {
+    __publicField(this, "name", NAME);
+  }
+  async get(key, cacheType) {
+    const r2 = getCloudflareContext().env[BINDING_NAME];
+    if (!r2)
+      throw new IgnorableError("No R2 bucket");
+    debugCache("R2IncrementalCache", `get ${key}`);
+    try {
+      const r2Object = await r2.get(this.getR2Key(key, cacheType));
+      if (!r2Object)
+        return null;
+      return {
+        value: await r2Object.json(),
+        lastModified: r2Object.uploaded.getTime()
+      };
+    } catch (e) {
+      error("Failed to get from cache", e);
+      return null;
+    }
+  }
+  async set(key, value, cacheType) {
+    const r2 = getCloudflareContext().env[BINDING_NAME];
+    if (!r2)
+      throw new IgnorableError("No R2 bucket");
+    debugCache("R2IncrementalCache", `set ${key}`);
+    try {
+      await r2.put(this.getR2Key(key, cacheType), JSON.stringify(value));
+    } catch (e) {
+      error("Failed to set to cache", e);
+    }
+  }
+  async delete(key) {
+    const r2 = getCloudflareContext().env[BINDING_NAME];
+    if (!r2)
+      throw new IgnorableError("No R2 bucket");
+    debugCache("R2IncrementalCache", `delete ${key}`);
+    try {
+      await r2.delete(this.getR2Key(key));
+    } catch (e) {
+      error("Failed to delete from cache", e);
+    }
+  }
+  getR2Key(key, cacheType) {
+    return computeCacheKey(key, {
+      prefix: getCloudflareContext().env[PREFIX_ENV_NAME],
+      buildId: process.env.OPEN_NEXT_BUILD_ID,
+      cacheType
+    });
+  }
+};
+var r2_incremental_cache_default = new R2IncrementalCache();
+
+// node_modules/@opennextjs/cloudflare/dist/api/overrides/queue/do-queue.js
+var do_queue_default = {
+  name: "durable-queue",
+  send: async (msg) => {
+    const durableObject = getCloudflareContext().env.NEXT_CACHE_DO_QUEUE;
+    if (!durableObject)
+      throw new IgnorableError("No durable object binding for cache revalidation");
+    const id = durableObject.idFromName(msg.MessageGroupId);
+    const stub = durableObject.get(id);
+    await stub.revalidate({
+      ...msg
+    });
+  }
+};
+
+// node_modules/@opennextjs/cloudflare/dist/api/overrides/tag-cache/d1-next-tag-cache.js
+var NAME2 = "d1-next-mode-tag-cache";
+var BINDING_NAME2 = "NEXT_TAG_CACHE_D1";
+var _D1NextModeTagCache_instances, resolveTagValues_fn;
+var D1NextModeTagCache = class {
+  constructor() {
+    __privateAdd(this, _D1NextModeTagCache_instances);
+    __publicField(this, "mode", "nextMode");
+    __publicField(this, "name", NAME2);
+  }
+  async getLastRevalidated(tags) {
+    const { isDisabled, db } = this.getConfig();
+    if (isDisabled || tags.length === 0) {
+      return 0;
+    }
+    try {
+      const result = await __privateMethod(this, _D1NextModeTagCache_instances, resolveTagValues_fn).call(this, tags, db);
+      const revalidations = [...result.values()].filter((v) => v != null).map((v) => v.revalidatedAt);
+      const timeMs = revalidations.length === 0 ? 0 : Math.max(...revalidations);
+      debugCache("D1NextModeTagCache", `getLastRevalidated tags=${tags} -> ${timeMs}`);
+      return timeMs;
+    } catch (e) {
+      error(e);
+      return 0;
+    }
+  }
+  async hasBeenRevalidated(tags, lastModified) {
+    const { isDisabled, db } = this.getConfig();
+    if (isDisabled || tags.length === 0) {
+      return false;
+    }
+    try {
+      const now = Date.now();
+      const result = await __privateMethod(this, _D1NextModeTagCache_instances, resolveTagValues_fn).call(this, tags, db);
+      const revalidated = [...result.values()].some((v) => {
+        if (v == null)
+          return false;
+        const { revalidatedAt, expire } = v;
+        if (expire != null)
+          return expire <= now && expire > (lastModified ?? 0);
+        return revalidatedAt > (lastModified ?? now);
+      });
+      debugCache("D1NextModeTagCache", `hasBeenRevalidated tags=${tags} at=${lastModified} -> ${revalidated}`);
+      return revalidated;
+    } catch (e) {
+      error(e);
+      return false;
+    }
+  }
+  async writeTags(tags) {
+    const { isDisabled, db } = this.getConfig();
+    if (isDisabled || tags.length === 0)
+      return Promise.resolve();
+    const nowMs = Date.now();
+    await db.batch(tags.map((tag) => {
+      const tagStr = typeof tag === "string" ? tag : tag.tag;
+      const stale = typeof tag === "string" ? nowMs : tag.stale ?? nowMs;
+      const expire = typeof tag === "string" ? null : tag.expire ?? null;
+      return db.prepare(`INSERT INTO revalidations (tag, revalidatedAt, stale, expire) VALUES (?, ?, ?, ?)`).bind(this.getCacheKey(tagStr), stale, stale, expire);
+    }));
+    const tagStrings = tags.map((t) => typeof t === "string" ? t : t.tag);
+    debugCache("D1NextModeTagCache", `writeTags tags=${tagStrings} time=${nowMs}`);
+    if (isPurgeCacheEnabled()) {
+      await purgeCacheByTags(tagStrings);
+    }
+  }
+  async isStale(tags, lastModified) {
+    const { isDisabled, db } = this.getConfig();
+    if (isDisabled || tags.length === 0) {
+      return false;
+    }
+    try {
+      const now = Date.now();
+      const result = await __privateMethod(this, _D1NextModeTagCache_instances, resolveTagValues_fn).call(this, tags, db);
+      const isStale = [...result.values()].some((v) => {
+        if (v == null)
+          return false;
+        const { revalidatedAt, stale, expire } = v;
+        const lastModifiedOrNow = lastModified ?? now;
+        const isInStaleWindow = stale != null && revalidatedAt > lastModifiedOrNow && lastModifiedOrNow <= stale;
+        if (!isInStaleWindow)
+          return false;
+        return expire == null || expire > now;
+      });
+      debugCache("D1NextModeTagCache", `isStale tags=${tags} at=${lastModified} -> ${isStale}`);
+      return isStale;
+    } catch (e) {
+      error(e);
+      return false;
+    }
+  }
+  getConfig() {
+    const db = getCloudflareContext().env[BINDING_NAME2];
+    if (!db)
+      debugCache("No D1 database found");
+    const isDisabled = Boolean(globalThis.openNextConfig.dangerous?.disableTagCache);
+    return !db || isDisabled ? { isDisabled: true } : {
+      isDisabled: false,
+      db
+    };
+  }
+  getCacheKey(key) {
+    return `${this.getBuildId()}/${key}`.replaceAll("//", "/");
+  }
+  getBuildId() {
+    return process.env.OPEN_NEXT_BUILD_ID ?? FALLBACK_BUILD_ID;
+  }
+  /**
+   * @returns request scoped in-memory cache for tag values, or undefined if ALS is not available.
+   */
+  getItemsCache() {
+    const store = globalThis.__openNextAls?.getStore();
+    return store?.requestCache.getOrCreate("d1-nextMode:tagItems");
+  }
+};
+_D1NextModeTagCache_instances = new WeakSet();
+resolveTagValues_fn = async function(tags, db) {
+  const result = /* @__PURE__ */ new Map();
+  const uncachedTags = [];
+  const itemsCache = this.getItemsCache();
+  for (const tag of tags) {
+    if (itemsCache?.has(tag)) {
+      result.set(tag, itemsCache.get(tag) ?? null);
+    } else {
+      uncachedTags.push(tag);
+    }
+  }
+  if (uncachedTags.length > 0) {
+    const rows = await db.prepare(`SELECT tag, revalidatedAt, stale, expire FROM revalidations WHERE tag IN (${uncachedTags.map(() => "?").join(", ")})`).bind(...uncachedTags.map((tag) => this.getCacheKey(tag))).raw();
+    const rowsByKey = new Map(rows.map((row) => [row[0], row]));
+    for (const tag of uncachedTags) {
+      const row = rowsByKey.get(this.getCacheKey(tag));
+      const value = row ? {
+        revalidatedAt: row[1] ?? 0,
+        stale: row[2] ?? null,
+        expire: row[3] ?? null
+      } : null;
+      itemsCache?.set(tag, value);
+      result.set(tag, value);
+    }
+  }
+  return result;
+};
+var d1_next_tag_cache_default = new D1NextModeTagCache();
+
+// node_modules/@opennextjs/cloudflare/dist/api/overrides/cache-purge/index.js
+var purgeCache = ({ type = "direct" }) => {
+  return {
+    name: "cloudflare",
+    async invalidatePaths(paths) {
+      const { env } = getCloudflareContext();
+      const tags = paths.map((path) => `_N_T_${path.rawPath}`);
+      debugCache("cdnInvalidation", "Invalidating paths:", tags);
+      if (type === "direct") {
+        await internalPurgeCacheByTags(env, tags);
+      } else {
+        const durableObject = env.NEXT_CACHE_DO_PURGE;
+        if (!durableObject) {
+          error("Purge cache: NEXT_CACHE_DO_PURGE not found. Skipping cache purge.");
+          return;
+        }
+        const id = durableObject.idFromName("cache-purge");
+        const obj = durableObject.get(id);
+        await obj.purgeCacheByTags(tags);
+      }
+      debugCache("cdnInvalidation", "Invalidated paths:", tags);
+    }
+  };
+};
+
 // open-next.config.ts
 var open_next_config_default = defineCloudflareConfig({
-  // For best results consider enabling R2 caching
-  // See https://opennext.js.org/cloudflare/caching for more details
-  // incrementalCache: r2IncrementalCache
+  incrementalCache: r2_incremental_cache_default,
+  queue: do_queue_default,
+  tagCache: d1_next_tag_cache_default,
+  cachePurge: purgeCache({ type: "direct" })
 });
 export {
   open_next_config_default as default
