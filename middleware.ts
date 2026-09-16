@@ -10,11 +10,33 @@ const PUBLIC_ADMIN_API_PATHS = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const responseHeaders = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "CDN-Cache-Control": "no-store",
+    "Cloudflare-CDN-Cache-Control": "no-store",
+  };
+  const withNoStore = (response: NextResponse) => {
+    for (const [name, value] of Object.entries(responseHeaders)) {
+      response.headers.set(name, value);
+    }
+    return response;
+  };
 
   const isPublicPage = PUBLIC_ADMIN_PATHS.some((path) => pathname.startsWith(path));
   const isPublicApi = PUBLIC_ADMIN_API_PATHS.some((path) => pathname.startsWith(path));
   if (isPublicPage || isPublicApi) {
-    return NextResponse.next();
+    return withNoStore(NextResponse.next());
+  }
+
+  const isAdminRequest = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
+  if (!isAdminRequest) {
+    const response = NextResponse.next();
+    const acceptsDynamicResponse =
+      pathname.startsWith("/api/") ||
+      request.headers.get("accept")?.includes("text/html") ||
+      request.headers.get("accept")?.includes("text/x-component");
+
+    return acceptsDynamicResponse ? withNoStore(response) : response;
   }
 
   const token = request.cookies.get(ADMIN_SESSION_COOKIE.name)?.value;
@@ -25,17 +47,17 @@ export async function middleware(request: NextRequest) {
     // to an HTML login page usefully); admin pages get redirected to the
     // login screen with the originally-requested page preserved.
     if (pathname.startsWith("/api/admin")) {
-      return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+      return withNoStore(NextResponse.json({ error: "Not authenticated." }, { status: 401 }));
     }
 
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("from", pathname);
-    return NextResponse.redirect(loginUrl);
+    return withNoStore(NextResponse.redirect(loginUrl));
   }
 
-  return NextResponse.next();
+  return withNoStore(NextResponse.next());
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/((?!_next/static|_next/image).*)"],
 };
