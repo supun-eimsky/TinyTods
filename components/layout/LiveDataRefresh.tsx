@@ -3,19 +3,23 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const REFRESH_INTERVAL_MS = 15_000;
+const REFRESH_INTERVAL_MS = 60_000;
 
 export function LiveDataRefresh() {
   const router = useRouter();
 
   useEffect(() => {
-    const refresh = () => router.refresh();
+    const refresh = () => {
+      if (document.visibilityState === "visible") router.refresh();
+    };
     const interval = window.setInterval(refresh, REFRESH_INTERVAL_MS);
 
     window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
     return () => {
       window.clearInterval(interval);
       window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
     };
   }, [router]);
 
